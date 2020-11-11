@@ -62,7 +62,8 @@
     },
 
 
-/*
+
+    /*
          _             _     _
      ___| |_ __ _ _ __| |_  | |__   ___ _ __ ___ _
     / __| __/ _` | '__| __| | '_ \ / _ \ '__/ _ (_)
@@ -79,12 +80,48 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
-      return false; // fixme
+
+      // console.log(this.attributes[rowIndex]);
+      let counter = 0;
+      for (let i = 0; i < this.attributes[rowIndex].length; i++) {
+        if (this.attributes[rowIndex][i] === 1) {
+          counter++;
+        }
+      }
+
+      if (counter > 1) {
+        return true;
+      }
+      // console.log(rowIndex);
+      return false;
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      return false; // fixme
+      let counter = 0;
+      // console.log(this.attributes);
+
+      // for (let i = 0; i < this.attributes.length; i ++) {
+      //   console.log(this.attributes[i]);
+      //   for (let j = 0; j < this.attributes[i].length; j ++) {
+      //     if (this.attributes[i][j] === 1) {
+      //       counter ++;
+      //     }
+      //   }
+      // }
+
+      for (let key in this.attributes) {
+        for (let i = 0; i < this.attributes[key].length; i++) {
+          if (this.attributes[key][i] === 1) {
+            counter++;
+          }
+        }
+      }
+
+      if (counter > 1) {
+        return true;
+      }
+      return false;
     },
 
 
@@ -99,7 +136,31 @@
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      return false; // fixme
+      let bigArr = [];
+
+      for (let k in this.attributes) {
+        if (k === 'n') {
+          continue;
+        }
+        let n = this.attributes.n - 1;
+        while (n >= 0) {
+          bigArr.push(this.attributes[k][n]);
+          n--;
+        }
+      }
+      console.log(bigArr);
+      for (let i = 0; i < n; i++) {
+
+      }
+
+      // [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0]
+      //  0  1  2  3  4
+
+
+      // let board = new Board(arrOfArrs);
+      // // console.log(this.attributes);
+      // // console.log(arrOfArrs);
+      // return board.hasAnyRowConflicts();
     },
 
 
