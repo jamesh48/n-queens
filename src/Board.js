@@ -139,39 +139,55 @@
       }
 
       //i < this.attributes.n doesn't work because it only works on the first row...
-      for (let i = 0; i < this.attributes.n; i++) {
+      for (let i = 0; i < bigArr.length; i++) {
         if (bigArr[i] === 1) {
-          for (let j = 0; j < bigArr.length; j += this.attributes.n) {
+          for (let j = i; j < bigArr.length; j += this.attributes.n) {
             // alert('i-> ' + i + ' <-j-> ' + (j - 1) + ' bigArr ' + bigArr);
-            if (bigArr[j - 1] === 1 && (j - 1) !== i) {
-              console.log('true: ' + JSON.stringify(this.attributes));
+            if (bigArr[j] === 1 && j !== i) {
               return true;
             }
           }
         }
       }
-      console.log('false: ' + JSON.stringify(this.attributes));
       return false;
     },
 
 
 
-    // Major Diagonals - go from top-left to bottom-right
+    // Major Diagonals - go from top-left to bottom-right \\\\\
     // --------------------------------------------------------------
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
+      // alert(majorDiagonalColumnIndexAtFirstRow);
       return false; // fixme
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
-      return false; // fixme
+      let counter = 0;
+      let initIndex = -1;
+
+      for (let key in this.attributes) {
+        if (key !== 'n' && this.attributes[key].indexOf(1) !== -1 && initIndex === -1) {
+          initIndex = this.attributes[key].indexOf(1);
+          counter++;
+          continue;
+        }
+        if (this.attributes[key][initIndex + counter] === 1) {
+          return true;
+        } else if (initIndex === -1) {
+          continue;
+        } else {
+          counter++;
+        }
+      }
+      return false;
     },
 
 
 
-    // Minor Diagonals - go from top-right to bottom-left
+    // Minor Diagonals - go from top-right to bottom-left /////
     // --------------------------------------------------------------
     //
     // test if a specific minor diagonal on this board contains a conflict
@@ -181,7 +197,24 @@
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      return false; // fixme
+      let counter = 0;
+      let initIndex = -1;
+
+      for (let key in this.attributes) {
+        if (key !== 'n' && this.attributes[key].indexOf(1) !== -1 && initIndex === -1) {
+          initIndex = this.attributes[key].indexOf(1);
+          counter--;
+          continue;
+        }
+        if (this.attributes[key][initIndex + counter] === 1) {
+          return true;
+        } else if (initIndex === -1) {
+          continue;
+        } else {
+          counter--;
+        }
+      }
+      return false;
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
