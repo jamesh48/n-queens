@@ -98,28 +98,17 @@
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      let counter = 0;
-      // console.log(this.attributes);
-
-      // for (let i = 0; i < this.attributes.length; i ++) {
-      //   console.log(this.attributes[i]);
-      //   for (let j = 0; j < this.attributes[i].length; j ++) {
-      //     if (this.attributes[i][j] === 1) {
-      //       counter ++;
-      //     }
-      //   }
-      // }
-
+      let counter;
       for (let key in this.attributes) {
+        counter = 0;
         for (let i = 0; i < this.attributes[key].length; i++) {
           if (this.attributes[key][i] === 1) {
             counter++;
+            if (counter > 1) {
+              return true;
+            }
           }
         }
-      }
-
-      if (counter > 1) {
-        return true;
       }
       return false;
     },
@@ -148,19 +137,21 @@
           n--;
         }
       }
-      console.log(bigArr);
-      for (let i = 0; i < n; i++) {
 
+      //i < this.attributes.n doesn't work because it only works on the first row...
+      for (let i = 0; i < this.attributes.n; i++) {
+        if (bigArr[i] === 1) {
+          for (let j = 0; j < bigArr.length; j += this.attributes.n) {
+            // alert('i-> ' + i + ' <-j-> ' + (j - 1) + ' bigArr ' + bigArr);
+            if (bigArr[j - 1] === 1 && (j - 1) !== i) {
+              console.log('true: ' + JSON.stringify(this.attributes));
+              return true;
+            }
+          }
+        }
       }
-
-      // [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0]
-      //  0  1  2  3  4
-
-
-      // let board = new Board(arrOfArrs);
-      // // console.log(this.attributes);
-      // // console.log(arrOfArrs);
-      // return board.hasAnyRowConflicts();
+      console.log('false: ' + JSON.stringify(this.attributes));
+      return false;
     },
 
 
