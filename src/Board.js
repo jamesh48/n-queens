@@ -1,7 +1,7 @@
 // This file is a Backbone Model (don't worry about what that means)
 // It's part of the Board Visualizer
 // The only portions you need to work on are the helper functions (below)
-
+let resultArr = [];
 (function() {
 
   window.Board = Backbone.Model.extend({
@@ -164,26 +164,71 @@
     },
 
     // test if any major diagonals on this board contain conflicts
-    hasAnyMajorDiagonalConflicts: function() {
-      let counter = 0;
-      let initIndex = -1;
-
+    hasAnyMajorDiagonalConflicts: function () {
+      // console.log('before ' + JSON.stringify(this.attributes));
       for (let key in this.attributes) {
-        if (key !== 'n' && this.attributes[key].indexOf(1) !== -1 && initIndex === -1) {
-          initIndex = this.attributes[key].indexOf(1);
-          counter++;
+        if (key === 'n') {
           continue;
         }
-        if (this.attributes[key][initIndex + counter] === 1) {
-          return true;
-        } else if (initIndex === -1) {
-          continue;
-        } else {
-          counter++;
-        }
+        this.attributes[key] = this.attributes[key].reverse();
       }
-      return false;
+
+      let test = this.hasAnyMinorDiagonalConflicts();
+      // this.attributes.this.hasAnyMinorDiagonalConflicts()
+      return test;
+      // let counter = 0;
+      // let initIndex = -1;
+
+      // let testBoard = this.attributes;
+
+      // for (let i = 0; i < testBoard.n; i++) {
+      //   for (let key in testBoard) {
+      //     if (key !== 'n' && testBoard[key].indexOf(1) !== -1 && initIndex === -1) {
+      //       initIndex = testBoard[key].indexOf(1);
+      //       counter++;
+      //       continue;
+      //     }
+      //     if (testBoard[key][initIndex + counter] === 1) {
+      //       return true;
+      //     } else if (initIndex === -1) {
+      //       continue;
+      //     } else {
+      //       counter++;
+      //     }
+      //   }
+      //   delete testBoard[i];
+      // }
+
+      // return false;
     },
+    // hasAnyMajorDiagonalConflicts: function() {
+    //   let resetFlag = false;
+    //   let counter = 0;
+    //   let initIndex = -1;
+
+    //   for (let key in this.attributes) {
+    //     if (key !== 'n' && this.attributes[key].indexOf(1) !== -1 && initIndex === -1) {
+    //       initIndex = this.attributes[key].indexOf(1);
+    //       counter++;
+    //     }
+    //     if (counter + initIndex > this.attributes.n - 1) {
+    //       counter = 0;
+    //       initIndex = -1;
+    //       resetFlag = true;
+    //       continue;
+    //     }
+    //     if (this.attributes[key][initIndex + counter] === 1) {
+    //       return true;
+    //     } else if (initIndex === -1) {
+    //       continue;
+    //     } else if (!resetFlag) {
+    //       counter++;
+    //     } else {
+    //       resetFlag = false;
+    //     }
+    //   }
+    //   return false;
+    // },
 
 
 
@@ -200,22 +245,64 @@
       let counter = 0;
       let initIndex = -1;
 
-      for (let key in this.attributes) {
-        if (key !== 'n' && this.attributes[key].indexOf(1) !== -1 && initIndex === -1) {
-          initIndex = this.attributes[key].indexOf(1);
-          counter--;
-          continue;
+      let testBoard = this.attributes;
+
+      for (let i = 0; i < testBoard.n; i ++) {
+        for (let key in testBoard) {
+          if (key !== 'n' && testBoard[key].indexOf(1) !== -1 && initIndex === -1) {
+            initIndex = testBoard[key].indexOf(1);
+            counter--;
+            continue;
+          }
+          if (testBoard[key][initIndex + counter] === 1) {
+            return true;
+          } else if (initIndex === -1) {
+            continue;
+          } else {
+            counter--;
+          }
         }
-        if (this.attributes[key][initIndex + counter] === 1) {
-          return true;
-        } else if (initIndex === -1) {
-          continue;
-        } else {
-          counter--;
-        }
+        delete testBoard[i];
       }
       return false;
     }
+
+    //     hasAnyMinorDiagonalConflicts: function() {
+    //       let resultArr = [];
+    //       let result = this.helper(this.attributes, resultArr);
+    //       alert(result);
+    //       return result.includes(true);
+    //     },
+
+    //     helper: function(board, resultArr) {
+    //       let counter = 0;
+    //       let initIndex = -1;
+    //       let initRow = -1;
+
+    //       for (let key in board) {
+    //         if (key !== 'n' && board[key].indexOf(1) !== -1 && initIndex === -1) {
+    //           initIndex = board[key].indexOf(1);
+    //           initRow = key;
+    //           counter--;
+    //           continue;
+    //         }
+    //         if (board[key][initIndex + counter] === 1) {
+    //           resultArr.push(true);
+    // //             return true;
+    //         } else if (initIndex === -1) {
+    //           continue;
+    //         } else {
+    //           counter--;
+    //         }
+    //       }
+    //     if (initRow > -1) {
+    //         let testBoard = board;
+    //         testBoard[initRow][initIndex] = 0;
+    //          this.helper(testBoard, resultArr);
+    //     }
+    //         resultArr.push(false);
+    //         return resultArr;
+    //     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
 

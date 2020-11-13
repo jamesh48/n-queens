@@ -12,18 +12,9 @@
 
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
-
-
-
 window.findNRooksSolution = function(n) {
-  // INPUTS: an integer / number (1 - 9)
-  // outputs: an array of arrays
-  // constraints: number must be 1 - 9
-  // edge: tba
-
-
   let solution = [];
-  let counter  = 0;
+  let counter = 0;
   for (let i = 0; i < n; i++) {
     let currentRow = [];
     for (let j = 0; j < n; j++) {
@@ -60,15 +51,53 @@ window.countNRooksSolutions = function(n) {
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
-  var solution = undefined; //fixme
+  if (n === 0) {
+    return [];
+  } else if (n === 1) {
+    return [[1]];
+  }
+  let board = [];
+  for (let i = 0; i < n; i++) {
+    let currRow = [];
+    for (let j = 0; j < n; j++) {
+      currRow.push(0);
+    }
+    board.push(currRow);
+  }
 
-  console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
-  return solution;
+
+  let testBoard = new Board(board);
+  // hasAnyQueenConflictsOn: function(rowIndex, colIndex)
+  // testBoard.attributes[0][0] = 1;
+  // console.log('xxt,' + JSON.stringify(testBoard.attributes));
+  for (let k in testBoard.attributes) {
+    if (k === 'n') {
+      continue;
+    }
+    for (let i = 0; i < testBoard.attributes[k].length; i++) {
+      testBoard.attributes[k][i] = 1;
+      let test = testBoard.hasAnyQueensConflicts();
+      if (test) {
+        testBoard.attributes[k][i] = 0;
+      }
+    }
+  }
+  console.log(testBoard.attributes);
+  // var solution = undefined; //fixme
+
+  // // 1: 1
+  // // 2: 1
+  // // 3: 2
+
+
+  // console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
+  // return solution;
 };
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
   var solutionCount = undefined; //fixme
+
 
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
