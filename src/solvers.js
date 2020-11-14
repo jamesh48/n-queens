@@ -49,54 +49,47 @@ window.countNRooksSolutions = function(n) {
   return solutionCount;
 };
 
-// return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
-window.findNQueensSolution = function(n) {
-  if (n === 0) {
-    return [];
-  } else if (n === 1) {
-    return [[1]];
-  }
-  let board = [];
-  for (let i = 0; i < n; i++) {
-    let currRow = [];
-    for (let j = 0; j < n; j++) {
-      currRow.push(0);
-    }
-    board.push(currRow);
+window.recursiveFunction = function(testBoard, startingRow, maxNumberOfRows, cb) {
+  if (startingRow === maxNumberOfRows) {
+    return cb(testBoard); //breaks recursion
   }
 
-
-  let testBoard = new Board(board);
-  // hasAnyQueenConflictsOn: function(rowIndex, colIndex)
-  // testBoard.attributes[0][0] = 1;
-  // console.log('xxt,' + JSON.stringify(testBoard.attributes));
-  for (let k in testBoard.attributes) {
-    if (k === 'n') {
-      continue;
-    }
-    for (let i = 0; i < testBoard.attributes[k].length; i++) {
-      testBoard.attributes[k][i] = 1;
-      let test = testBoard.hasAnyQueensConflicts();
-      if (test) {
-        testBoard.attributes[k][i] = 0;
+  for (let i = 0; i < maxNumberOfRows; i ++) {
+    testBoard.togglePiece(startingRow, i);
+    if (!testBoard.hasAnyQueensConflicts()) {
+      let boardInProgress = recursiveFunction(testBoard, startingRow + 1, maxNumberOfRows, cb);
+      if (boardInProgress) {
+        return boardInProgress;
       }
     }
+    testBoard.togglePiece(startingRow, i);
   }
-  console.log(testBoard.attributes);
-  // var solution = undefined; //fixme
+};
 
-  // // 1: 1
-  // // 2: 1
-  // // 3: 2
+// return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
+window.findNQueensSolution = function(n) {
+  let solution;
 
+  let testBoard = new Board({n: n});
+  solution = testBoard.rows();
 
-  // console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
-  // return solution;
+  recursiveFunction(testBoard, 0, n, (testBoard) => {
+    return solution = testBoard.rows();
+  });
+
+  console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
+
+  return solution;
 };
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
-  var solutionCount = undefined; //fixme
+  var solutionCount = 0;
+  let board = new Board({n: n});
+
+  recursiveFunction(board, 0, n, (board) => {
+    solutionCount ++;
+  });
 
 
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);

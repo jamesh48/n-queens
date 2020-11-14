@@ -80,29 +80,23 @@ let resultArr = [];
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
-
-      // console.log(this.attributes[rowIndex]);
-      let counter = 0;
-      for (let i = 0; i < this.attributes[rowIndex].length; i++) {
-        if (this.attributes[rowIndex][i] === 1) {
-          counter++;
-        }
-      }
-
-      if (counter > 1) {
-        return true;
-      }
-      // console.log(rowIndex);
-      return false;
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
       let counter;
-      for (let key in this.attributes) {
+      let board;
+
+      if (this.attributes[0] === undefined) {
+        // board = this._current_previousA
+      } else {
+        board = this.attributes;
+      }
+
+      for (let key in board) {
         counter = 0;
-        for (let i = 0; i < this.attributes[key].length; i++) {
-          if (this.attributes[key][i] === 1) {
+        for (let i = 0; i < board[key].length; i++) {
+          if (board[key][i] === 1) {
             counter++;
             if (counter > 1) {
               return true;
@@ -138,7 +132,6 @@ let resultArr = [];
         }
       }
 
-      //i < this.attributes.n doesn't work because it only works on the first row...
       for (let i = 0; i < bigArr.length; i++) {
         if (bigArr[i] === 1) {
           for (let j = i; j < bigArr.length; j += this.attributes.n) {
@@ -159,78 +152,37 @@ let resultArr = [];
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      // alert(majorDiagonalColumnIndexAtFirstRow);
-      return false; // fixme
+      return false;
     },
 
-    // test if any major diagonals on this board contain conflicts
-    hasAnyMajorDiagonalConflicts: function () {
-      // console.log('before ' + JSON.stringify(this.attributes));
-      for (let key in this.attributes) {
-        if (key === 'n') {
-          continue;
+    hasAnyMajorDiagonalConflicts: function() {
+      let testBoard = this.attributes;
+      let rowIndexCounter = -1;
+      for (let i = 0; i < testBoard.n; i++) {
+        let counter = 0;
+        let initIndex = -1;
+
+        for (let key in testBoard) {
+          if (key <= rowIndexCounter) {
+            continue;
+          }
+          if (key !== 'n' && testBoard[key].indexOf(1) !== -1 && initIndex === -1) {
+            initIndex = testBoard[key].indexOf(1);
+            counter++;
+            continue;
+          }
+          if (testBoard[key][initIndex + counter] === 1) {
+            return true;
+          } else if (initIndex === -1) {
+            continue;
+          } else {
+            counter++;
+          }
         }
-        this.attributes[key] = this.attributes[key].reverse();
+        rowIndexCounter++;
       }
-
-      let test = this.hasAnyMinorDiagonalConflicts();
-      // this.attributes.this.hasAnyMinorDiagonalConflicts()
-      return test;
-      // let counter = 0;
-      // let initIndex = -1;
-
-      // let testBoard = this.attributes;
-
-      // for (let i = 0; i < testBoard.n; i++) {
-      //   for (let key in testBoard) {
-      //     if (key !== 'n' && testBoard[key].indexOf(1) !== -1 && initIndex === -1) {
-      //       initIndex = testBoard[key].indexOf(1);
-      //       counter++;
-      //       continue;
-      //     }
-      //     if (testBoard[key][initIndex + counter] === 1) {
-      //       return true;
-      //     } else if (initIndex === -1) {
-      //       continue;
-      //     } else {
-      //       counter++;
-      //     }
-      //   }
-      //   delete testBoard[i];
-      // }
-
-      // return false;
+      return false;
     },
-    // hasAnyMajorDiagonalConflicts: function() {
-    //   let resetFlag = false;
-    //   let counter = 0;
-    //   let initIndex = -1;
-
-    //   for (let key in this.attributes) {
-    //     if (key !== 'n' && this.attributes[key].indexOf(1) !== -1 && initIndex === -1) {
-    //       initIndex = this.attributes[key].indexOf(1);
-    //       counter++;
-    //     }
-    //     if (counter + initIndex > this.attributes.n - 1) {
-    //       counter = 0;
-    //       initIndex = -1;
-    //       resetFlag = true;
-    //       continue;
-    //     }
-    //     if (this.attributes[key][initIndex + counter] === 1) {
-    //       return true;
-    //     } else if (initIndex === -1) {
-    //       continue;
-    //     } else if (!resetFlag) {
-    //       counter++;
-    //     } else {
-    //       resetFlag = false;
-    //     }
-    //   }
-    //   return false;
-    // },
-
-
 
     // Minor Diagonals - go from top-right to bottom-left /////
     // --------------------------------------------------------------
@@ -242,13 +194,17 @@ let resultArr = [];
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      let counter = 0;
-      let initIndex = -1;
-
       let testBoard = this.attributes;
-
+      let rowIndexCounter = -1;
       for (let i = 0; i < testBoard.n; i ++) {
+        let counter = 0;
+        let initIndex = -1;
+
         for (let key in testBoard) {
+          if (key <= rowIndexCounter) {
+            continue;
+          }
+
           if (key !== 'n' && testBoard[key].indexOf(1) !== -1 && initIndex === -1) {
             initIndex = testBoard[key].indexOf(1);
             counter--;
@@ -262,47 +218,10 @@ let resultArr = [];
             counter--;
           }
         }
-        delete testBoard[i];
+        rowIndexCounter++;
       }
       return false;
     }
-
-    //     hasAnyMinorDiagonalConflicts: function() {
-    //       let resultArr = [];
-    //       let result = this.helper(this.attributes, resultArr);
-    //       alert(result);
-    //       return result.includes(true);
-    //     },
-
-    //     helper: function(board, resultArr) {
-    //       let counter = 0;
-    //       let initIndex = -1;
-    //       let initRow = -1;
-
-    //       for (let key in board) {
-    //         if (key !== 'n' && board[key].indexOf(1) !== -1 && initIndex === -1) {
-    //           initIndex = board[key].indexOf(1);
-    //           initRow = key;
-    //           counter--;
-    //           continue;
-    //         }
-    //         if (board[key][initIndex + counter] === 1) {
-    //           resultArr.push(true);
-    // //             return true;
-    //         } else if (initIndex === -1) {
-    //           continue;
-    //         } else {
-    //           counter--;
-    //         }
-    //       }
-    //     if (initRow > -1) {
-    //         let testBoard = board;
-    //         testBoard[initRow][initIndex] = 0;
-    //          this.helper(testBoard, resultArr);
-    //     }
-    //         resultArr.push(false);
-    //         return resultArr;
-    //     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
 
