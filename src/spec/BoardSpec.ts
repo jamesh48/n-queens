@@ -1,19 +1,23 @@
 describe('Board', function() {
 
-  var capitalize = function(word) {
+  var capitalize = function(word: string) {
     return word[0].toUpperCase() + word.slice(1);
   };
 
 
-  var verifyConflictTypes = function(expectedConflicts, matrix) {
+  var verifyConflictTypes = function(expectedConflicts: string[], matrix: number[][]) {
     // The Board() constructor will accept a matrix and build that into a (Backbone) Board object (as defined in Board.js)
+    // @ts-ignore
     var board = new Board(matrix);
-    _.map('row col rooks majorDiagonal minorDiagonal queens'.split(' '), function(conflictType) {
+    // @ts-ignore
+    _.map('row col rooks majorDiagonal minorDiagonal queens'.split(' '), function(conflictType: string) {
       var conflictDetected = board['hasAny' + capitalize(conflictType) + 'Conflicts'](); // this makes all the tests for verifyConflictTypes\
+      // @ts-ignore
       var conflictExpected = _(expectedConflicts).contains(conflictType);
       var message = conflictExpected ? 'should' : 'should not';
 
       it(message + ' find a ' + conflictType + ' conflict', function() {
+        // @ts-ignore
         expect(conflictDetected).to.be.equal(conflictExpected);
       });
     });

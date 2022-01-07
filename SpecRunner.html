@@ -1,4 +1,4 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
   <head>
     <title>Mocha Spec Runner</title>
@@ -9,27 +9,28 @@
     <script src="lib/backbone.js"></script>
 
     <!-- testing frameworks -->
-    <link rel="stylesheet" href="lib/mocha/mocha.css">
+    <link rel="stylesheet" href="lib/mocha/mocha.css" />
     <script src="lib/mocha/mocha.js"></script>
     <script src="lib/chai/chai.js"></script>
     <script src="lib/sinon/sinon.js"></script>
     <script>
-      mocha.setup('bdd');
+      mocha.setup("bdd");
       window.expect = chai.expect;
-      $(function() {
+      $(function () {
         window.mochaPhantomJS ? mochaPhantomJS.run() : mocha.run();
       });
+      exports = {};
     </script>
 
     <!-- source files -->
-    <script src="src/Board.js"></script>
-    <script src="src/BoardView.js"></script>
-    <script src="src/solvers.js"></script>
+    <script src="dist/Board.js"></script>
+    <script src="dist/BoardView.js"></script>
+    <script src="dist/solvers.js"></script>
 
     <!-- tests -->
-    <script src="spec/BoardSpec.js"></script>
-    <script src="spec/BoardViewSpec.js"></script>
-    <script src="spec/solversSpec.js"></script>
+    <script src="dist/spec/BoardSpec.js"></script>
+    <script src="dist/spec/BoardViewSpec.js"></script>
+    <script src="dist/spec/solversSpec.js"></script>
   </head>
   <body>
     <div id="mocha"></div>
